@@ -1,0 +1,32 @@
+[user]
+	name = ser.korzhikov
+	email = ser.korzhikov@gmail.com
+[color]
+	diff = "auto"
+	status = "auto"
+	branch = "auto"
+[color "branch"]
+    current = yellow reverse
+    local = yellow
+    remote = green
+
+[color "diff"]
+    meta = yellow bold
+    frag = magenta bold
+    old = red bold
+    new = green bold
+
+[color "status"]
+    added = yellow
+    changed = red
+    untracked = cyan
+
+[alias]
+    hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
+    co = checkout
+    ci = commit
+    st = status
+    br = branch
+	pullwm = pull --no-edit
+[push]
+	default = matching
