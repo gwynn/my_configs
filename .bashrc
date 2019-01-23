@@ -110,6 +110,9 @@ export ANDROID_HOME=$ANDROID_HOME
 export PATH=$ANDROID_TOOLS:$PATH
 export PATH=$ANDROID_PLATFORM_TOOLS:$PATH
 
+export GOPATH=$HOME/go
+export PATH=$PATH:$GOROOT/bin:$GOPATH/bin
+
 function git_branch {
     git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/[git:\1]/';
 }
@@ -128,5 +131,9 @@ function git_status {
 	 export PS1="\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\[\$(git_status)\]\$(git_branch)\[\$(tput sgr 0)\]$ "
 #eval $(thefuck --alias)
 
-export NVM_DIR="/root/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+
+alias tmux='tmux-next'
+
+

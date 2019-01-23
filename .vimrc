@@ -1,8 +1,38 @@
 " Включаем мышку даже в текстовом режиме
 " (очень удобно при копировании из терминала, т. к. без этой опции,
 " например, символы табуляции раскладываются в кучу пробелов).
-call pathogen#infect()
-call pathogen#helptags()
+"call pathogen#infect()
+"call pathogen#helptags()
+" Specify a directory for plugins
+" - For Neovim: ~/.local/share/nvim/plugged
+" - Avoid using standard Vim directory names like 'plugin'
+call plug#begin('~/.vim/plugged')
+
+" On-demand loading
+Plug 'scrooloose/nerdtree'
+"Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
+
+Plug 'godlygeek/tabular'
+Plug 'mattn/emmet-vim'
+Plug 'scrooloose/syntastic'
+Plug 'Quramy/tsuquyomi'
+", { 'for': 'ts' }
+Plug 'leafgarland/typescript-vim'
+Plug 'tpope/vim-fugitive'
+Plug 'valloric/MatchTagAlways'
+
+"Plug 'Quramy/vim-js-pretty-template'
+
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+"Plug 'Shougo/vimproc.vim'
+
+" Using a tagged release; wildcard allowed (requires git 1.9.2 or above)
+"Plug 'fatih/vim-go', { 'tag': '*' }
+
+" Initialize plugin system
+call plug#end()
+
 filetype plugin indent on
 filetype plugin on
 set mouse=a
@@ -21,9 +51,14 @@ set laststatus=2
 set completeopt=menu
 
 " Размер табуляции
-set tabstop=4
+" set tabstop=4
 " Размер сдвига при нажатии на клавиши << и   >>  
-set shiftwidth=4
+" set shiftwidth=4
+set tabstop=4 softtabstop=0 expandtab shiftwidth=4 smarttab
+
+"set smarttab
+
+"set expandtab
 " Копирует отступ от предыдущей строки
 set autoindent
 " Включаем 'умную' автоматическую расстановку отступов
@@ -74,7 +109,7 @@ set whichwrap=b,s,<,>,[,],l,h
 "set foldmethod=manual
 
 " Настраиваем переключение раскладок клавиатуры по <C-^>
-set keymap=russian-jcukenwin
+"set keymap=russian-jcukenwin
 " Раскладка по умолчанию - английская
 set iminsert=0
 set imsearch=0 
@@ -124,9 +159,9 @@ imap <F2> <Esc>:TlistToggle<CR>
 vmap <F2> <Esc>:TlistToggle<CR>
 
 " Очистить подсветку последнего найденного выражения
-nmap <F3> :nohlsearch<CR>
-imap <F3> <Esc>:nohlsearch<CR>
-vmap <F3> <Esc>:nohlsearch<CR>gv
+nmap <F3> :noh<CR>
+imap <F3> <Esc>:noh<CR>
+vmap <F3> <Esc>:noh<CR>gv
 
 " Сохранить файл
 nmap <F4> :w!<CR>
@@ -148,7 +183,9 @@ nmap <PageDown> <C-D><C-D>
 imap <PageDown> <C-O><C-D><C-O><C-D>
 
 " nerdtree
-map <C-n> :NERDTreeToggle<CR>
+map <F6> :NERDTreeToggle<CR>
+imap <F6> :NERDTreeToggle<CR>
+vmap <F6> :NERDTreeToggle<CR>
 " Переключение раскладок и индикация выбранной
 " в данный момент раскладки.
 " -->
@@ -438,3 +475,56 @@ nmap <c-f> :cs find g <c-r>=expand("<cword>")<cr><cr>
 " vim-javascript
 let g:javascript_plugin_jsdoc = 1
 set conceallevel=1
+
+
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+"let g:syntastic_check_on_open = 1
+"let g:syntastic_check_on_wq = 0
+
+let g:typescript_indent_disable = 1
+let g:typescript_compiler_binary = 'tsc'
+let g:typescript_compiler_options = ''
+autocmd QuickFixCmdPost [^l]* nested cwindow
+autocmd QuickFixCmdPost    l* nested lwindow
+autocmd FileType typescript setlocal completeopt+=menu,preview
+
+let g:tsuquyomi_disable_quickfix = 1
+let g:syntastic_typescript_checkers = ['tsuquyomi']
+
+set ballooneval
+autocmd FileType typescript setlocal balloonexpr=tsuquyomi#balloonexpr()
+
+au BufReadPost *.twig set syntax=html
+" valloric/MatchTagAlways - lways highlights the XML/HTML tags that enclose your cursor location
+let g:mta_use_matchparen_group = 1
+let g:mta_filetypes = {
+\ 'html' : 1,
+\ 'xhtml' : 1,
+\ 'xml' : 1,
+\ 'twig' : 1,
+\ 'stpl' : 1,
+\}
+nnoremap <leader>% :MtaJumpToOtherTag<cr>
+
+function! AirlineInit()
+	let g:airline_section_a = airline#section#create(['mode',' ', 'branch'])
+	let g:airline_section_b = airline#section#create_left(['ffenc','hunks','%f'])
+	let g:airline_section_c = airline#section#create(['filetype'])
+	let g:airline_section_x = airline#section#create(['%P'])
+	let g:airline_section_y = airline#section#create(['%B'])
+	let g:airline_section_z = airline#section#create_right(['%l','%c'])
+
+	let g:airline_enable_syntastic=1
+	let g:airline_theme='minimalist'
+endfunction
+autocmd VimEnter * call AirlineInit()
+
+let g:airline#extensions#whitespace#enabled = 0
+
+"autocmd FileType typescript JsPreTmpl html 
+"autocmd FileType typescript syn clear foldBraces
