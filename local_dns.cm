@@ -1,0 +1,6 @@
+как сделать себе локальный ДНС с широкополосной маской для *.dev
+---------
+sydo apt-get remove bind9 # если кто не понимает что это и для чего - лучше удалить
+sudo apt-get install dnsmasq
+echo 'address=/dev/127.0.0.1' > /etc/dnsmasq.d/dev
+sudo service dnsmasq restart
